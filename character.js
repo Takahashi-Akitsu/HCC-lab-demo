@@ -469,15 +469,22 @@
       });
 
       const jobs = LAYERS.map(async p => {
+        /* 平静等没有气泡图的表情直接跳过，别去探 bubble-idle.png（否则控制台一条 404） */
+        if (p.id === 'bubble-face' && !BUBBLES[state]) {
+          bubbleUrl = null;
+          if (my === token) showBubble();
+          return;
+        }
         const url = await firstAvailable(p.files.map(f => BASE + fill(f, state)));
         if (my !== token) return;
         setSegArt(layerEl(p.id), url);
         if (p.id === 'face-feat') {
           const l = layerEl('face-feat');
           l.dataset.openUrl = url || '';
-          // 眨眼差分：优先自己的，没画就共用 face-warn-blink.png（三个为难表情）
-          const cands = [BASE + fill(p.blink, state)];
-          if (SHARED_BLINK_FOR.indexOf(state) >= 0) cands.push(BASE + SHARED_BLINK);
+          // 眨眼差分：三个为难表情直接共用 face-warn-blink.png（不再先探自己的那张，避免控制台 404）
+          const cands = SHARED_BLINK_FOR.indexOf(state) >= 0
+            ? [BASE + SHARED_BLINK]
+            : [BASE + fill(p.blink, state)];
           const b = await firstAvailable(cands);
           if (my !== token) return;
           blinkUrl = b;

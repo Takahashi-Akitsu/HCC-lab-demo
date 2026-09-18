@@ -1,0 +1,26 @@
+# ===== 不要上传到仓库的文件 =====
+# 离线包 / 打包产物
+code.zip
+*.zip
+
+# 挪文件时留下的副本
+js.bak
+*.bak
+
+# 设计源文件（体积大，只保留导出的 png/jpg）
+*.kra
+*.kra~
+*.psd
+*.ai
+*.xcf
+
+# 系统/编辑器垃圾
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Python 缓存（insert_images.py 用得到）
+__pycache__/
+*.py[cod]
