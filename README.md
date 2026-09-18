@@ -24,7 +24,7 @@
 *   `styles.css` - 页面样式表
 
 ### 👤 作者
-*   **邹诗妍** - *[https://github.com/Takahashi-Akitsu]*
+*   **海盐713** - *[https://github.com/Takahashi-Akitsu]*
 
 ### 📄 版权声明
 本项目仅供学习交流使用。
