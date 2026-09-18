@@ -1,0 +1,35 @@
+# ===== 操作系统/编辑器产生的垃圾文件 =====
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# ===== Python 缓存 =====
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# ===== 临时/备份文件 =====
+*.tmp
+*.bak
+*.log
+~$*
+
+# ===== 图像编辑软件源文件 =====
+# 截图里有 lihui.kra 和 lihui.kra~ 这类大文件
+# 建议忽略源文件，只上传最终导出的图片（如 assets 里的 png/jpg）
+*.kra
+*.kra~
+*.psd
+*.ai
+*.xcf
+*.blend
+
+# ===== 大型二进制/资源文件（视情况开启） =====
+# 如果你的 assets 文件夹里有大量超过 50MB 的视频或图片，建议在 GitHub 上用 Releases 或者 Git LFS 来管理，不要直接提交进仓库
+# 如果 assets 里都是常规小图，上面几行不用取消注释
+# assets/large_video.mp4

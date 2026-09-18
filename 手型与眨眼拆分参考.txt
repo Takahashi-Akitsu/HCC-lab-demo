@@ -1,0 +1,87 @@
+手型精简 + 共用眨眼 · 拆分参考
+======================================================================
+这一版的两处「省图」：手型 6 → 4 张，眨眼差分 6 → 4 张
+角色图片总数：32 → 28 张（已到位 12 张，还差 16 张）
+
+
+一、手型还能省 2 张（6 → 4）
+----------------------------------------------------------------------
+| 手型                | 用在哪                          | 结论               |
+| ------------------- | ------------------------------- | ------------------ |
+| hand-relaxed.png    | 垂手 / 搭手 / 背后 / 抱臂 / 叉腰 | 必画（最百搭）     |
+| hand-open.png       | 摆手 / 摊掌 / 双手挥舞 / 耸肩    | 必画               |
+| hand-thumb.png      | 点赞（竖大拇指）                 | 必画               |
+| hand-count.png      | 算账（拇指食指相触）             | 建议保留           |
+| hand-cross.png      | 抱臂交叠                         | ✂ 可省 → 用 relaxed |
+| hand-hip.png        | 叉腰                             | ✂ 可省 → 用 relaxed |
+
+为什么可以省：
+角色在页面上只有 220px 宽，一只手 ≈ 15px（2× 高清屏 30px）。
+relaxed / cross / hip 都是「握着的手」，在这个尺寸下几乎看不出差别，
+靠「手腕偏角」就能把 relaxed 摆成扶胯或交叠的样子。
+真正有辨识度的只有三种：张开的掌、竖起的拇指、拇指食指相触的小圈。
+
+代码已经支持：cross / hip 缺图时自动用 hand-relaxed.png 顶
+（js/character.js 的 HAND_ALIAS）。以后想补画随时放进去，代码不用改。
+
+
+二、三个「为难」表情共用一张 wink（眨眼差分）
+----------------------------------------------------------------------
+原来要画：face-warn-cred-blink / face-warn-cost-blink / face-warn-both-blink = 3 张
+现在只画：face-warn-blink.png = 1 张，三个表情共用  → 省 2 张
+
+为什么能共用：
+眨眼差分只改「眼睛睁→闭」，三张为难表情用的是同一种眼型，
+所以闭眼那一帧本来就是同一张图；眉毛 / 嘴 / 汗滴依然各自躺在自己的
+face-<表情>-open.png 里，切这张差分不会影响它们。
+（页面每 3.4 秒眨一次，闭眼只显示 0.14 秒，肉眼几乎抓不到）
+
+拆分 / 画法：
+1. 打开 Krita 源文件，复制 face-warn-cred-open 那一层（五官层）
+2. 只把两只眼睛改成闭眼（一条弧线），眉毛、嘴、汗滴、腮红全部保持不动
+3. 导出 1000×1400 透明 PNG，命名 face-warn-blink.png
+4. 位置与 face-warn-cred-open.png 完全对齐（同画布、不裁剪）
+
+代码回退顺序（js/character.js）：
+  face-<表情>-blink.png  →  face-warn-blink.png（只有 warn-cred/warn-cost/warn-both 吃这张）
+  idle / pass / fail 不吃共用图，仍各画各的（眼型不同，共用了会跳眼）
+
+所以最终眨眼差分只有 4 张：
+  face-idle-blink.png ✓（已有）
+  face-pass-blink.png   □
+  face-fail-blink.png   □
+  face-warn-blink.png   □ ← 新名字，三个为难表情共用
+
+
+三、更新后的清单（共 28 张）
+----------------------------------------------------------------------
+脸 11  = face-base(1) + face-<表情>-open(6) + face-<表情>-blink(4)
+头发 5 = hair-back + hair-mid + hair-front-1/2/3
+身体 1 = body
+手臂 6 = arm-upper + arm-fore + hand-relaxed / open / thumb / count
+气泡 5 = bubble-warn-cred / warn-cost / warn-both / pass / fail
+
+已到位 12 张：
+  body / face-base / face-idle-open / face-idle-blink / hair-back / hair-mid /
+  hair-front-1/2/3 / arm-upper / arm-fore / hand-relaxed
+
+还差 16 张：
+  脸 · 5 张 -open     face-warn-cred-open / warn-cost-open / warn-both-open / pass-open / fail-open
+  脸 · 3 张 blink     face-warn-blink（三表情共用）/ face-pass-blink / face-fail-blink
+  手 · 3 张           hand-open / hand-thumb / hand-count
+  气泡 · 5 张         bubble-*
+
+
+四、图层 z 表（含这次的修正）
+----------------------------------------------------------------------
+  8   最后面（全部之上没别的；目前没人用）
+  10  hair-back 后发
+  30  body 身体
+  40  双手背后·手臂层（压过后发与身体，其余图层之下）★ 本次修正
+  36  左臂（身体前）      38  右臂（身体前）
+  50  face-base 脸打底
+  55  hair-mid 基底头发（不动）
+  60/61/62  hair-front-1/2/3 前发
+  63  face-feat 五官/表情（压过所有头发）
+  65  举到脸旁的手臂（顶层，压过五官与前发）
+  70  bubble 情绪气泡

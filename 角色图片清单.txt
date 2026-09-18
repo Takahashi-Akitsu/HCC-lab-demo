@@ -1,0 +1,67 @@
+角色部件 · 画图清单（已全部到位 ✓）
+======================================================================
+画布统一：1000 × 1400 px，PNG 透明底，导出不裁剪、不移动
+共 28 张 = 脸 11 + 头发 5 + 身体 1 + 手臂 6 + 气泡 5
+状态：**28 / 28 全部到位**，游戏与调参台都已接上真实图片。
+
+放图位置：assets/character/
+
+
+一、已到位的 28 张
+----------------------------------------------------------------------
+脸（11）
+  face-base.png               脸打底
+  face-idle-open.png          平静 · 睁眼
+  face-warn-cred-open.png     担心 · 睁眼
+  face-warn-cost-open.png     肉疼 · 睁眼
+  face-warn-both-open.png     犯难 · 睁眼   ← 交付时文件名串成了
+                                              「lihui.pngface-warn-both-open.png」，已改名
+  face-pass-open.png          满意 · 睁眼
+  face-fail-open.png          失落 · 睁眼
+  face-idle-blink.png         平静 · 眨眼
+  face-warn-blink.png         三个为难表情共用的眨眼
+  face-pass-blink.png         满意 · 眨眼
+  face-fail-blink.png         失落 · 眨眼
+
+头发（5）
+  hair-back.png   hair-mid.png   hair-front-1.png   hair-front-2.png   hair-front-3.png
+
+身体（1）
+  body.png
+
+手臂（6）
+  arm-upper.png   arm-fore.png
+  hand-relaxed.png   hand-open.png   hand-thumb.png   hand-count.png
+
+气泡（5）
+  bubble-warn-cred.png   bubble-warn-cost.png   bubble-warn-both.png
+  bubble-pass.png        bubble-fail.png
+
+
+二、可选补充（不做也完全能跑）
+----------------------------------------------------------------------
+  hand-cross.png   半握：抱臂交叠时手型更贴；缺图自动用 hand-relaxed 顶
+  hand-hip.png     叉腰手：叉腰时手指方向更自然；缺图同样自动回退
+
+  想做就把文件丢进 assets/character/，代码不用改。
+
+
+三、图层 z 表（最终版）
+----------------------------------------------------------------------
+  10  hair-back 后发
+  30  body 身体
+  36  左臂（身体前）      38  右臂（身体前）
+  40  双手背后·手臂层（压过后发与身体，其余之下）
+  50  face-base 脸打底
+  55  hair-mid 基底头发（不动）
+  60/61/62  hair-front-1/2/3 前发
+  63  face-feat 五官/表情（压过所有头发）
+  65  举到脸旁的手臂（顶层）
+  70  气泡（可按表情单独调位置 / 大小 / 旋转）
+
+
+四、实测锚点（调参台里可以改）
+----------------------------------------------------------------------
+肩 (397, 790) · 肘 (398, 935) · 腕 (400, 1005)      [画布 1000×1400 像素]
+大臂 145px · 小臂 70px · 手 68px
+手与气泡另有：位置(左右/上下) · 大小 · 旋转 四个量，都能在调参台里调，导出 JSON。
