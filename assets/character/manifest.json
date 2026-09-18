@@ -1,0 +1,58 @@
+{
+  "canvas": { "width": 1000, "height": 1400, "format": "png", "transparent": true, "rule": "所有部件共用同一张画布，导出时不裁剪、不移动" },
+  "expressions": ["idle", "warn-cred", "warn-cost", "warn-both", "pass", "fail"],
+  "expressionLabels": {
+    "idle": "平静",
+    "warn-cred": "担心（可信度不足）",
+    "warn-cost": "肉疼（时间/经济成本过高）",
+    "warn-both": "犯难（两样都差）",
+    "pass": "满意（设计达标）",
+    "fail": "失落（提交未达标）"
+  },
+  "layerOrder": "从后到前：后发 → 身体 → 脸打底 → 中发 → 前发(左/中/右) → 五官/表情 → 举到脸旁的手臂 → 气泡",
+  "layers": [
+    { "id": "hair-back", "z": 10, "anchor": "50% 30%", "file": "hair-back.png", "note": "后发，最底层；以后会做轻微摇摆" },
+    { "id": "body", "z": 30, "anchor": "50% 100%", "file": "body.png", "note": "躯干+双腿+衣服，头部留空" },
+    { "id": "face-base", "z": 50, "anchor": "50% 22%", "file": "face-base.png", "note": "脸打底：肤色+轮廓，不含五官" },
+    { "id": "face-feat", "z": 63, "anchor": "50% 22%", "file": "face-{expression}-open.png", "blinkFile": "face-{expression}-blink.png", "sharedBlinkFile": "face-warn-blink.png", "sharedBlinkFor": ["warn-cred", "warn-cost", "warn-both"], "note": "五官/表情：压在所有头发之上，仅低于举到脸旁的手臂(z65)；眨眼差分优先自己的，没画就用共用那张" },
+    { "id": "hair-mid", "z": 55, "anchor": "50% 22%", "file": "hair-mid.png", "note": "基底头发，不动；压在脸上面、前发下面" },
+    { "id": "hair-front-1", "z": 60, "anchor": "34% 26%", "file": "hair-front-1.png", "note": "前发·左条" },
+    { "id": "hair-front-2", "z": 61, "anchor": "50% 24%", "file": "hair-front-2.png", "note": "前发·中条" },
+    { "id": "hair-front-3", "z": 62, "anchor": "66% 26%", "file": "hair-front-3.png", "note": "前发·右条" },
+    { "id": "bubble-face", "z": 70, "anchor": null, "file": "bubble-{expression}.png", "note": "情绪小气泡，平静无；画布左上 x 6%-28%, y 2%-18%，不得覆盖脸部；短暂显示约 1.8 秒" }
+  ],
+  "armRig": {
+    "note": "手臂＝肩→肘→腕 三级嵌套。大臂/小臂各 1 张、左右共用（右臂整棵 scaleX(-1) 镜像）；手型单独出图。姿态只写角度，见 js/character.js 的 ARM_POSES。",
+    "chain": [
+      { "id": "arm-upper", "anchor": "39.70% 56.43%", "file": "arm-upper.png", "note": "大臂：从肩垂直向下 145px；绕肩转" },
+      { "id": "arm-fore", "anchor": "39.80% 66.79%", "file": "arm-fore.png", "note": "小臂：从肘垂直向下 70px；绕肘转" },
+      { "id": "hand", "anchor": "40.00% 71.79%", "file": "hand-{hand}.png", "note": "手：沿小臂延长线向下 68px；绕腕转" }
+    ],
+    "anchorPx": { "shoulder": [397, 790], "elbow": [398, 935], "wrist": [400, 1005] },
+    "anchorNote": "锚点为实测值（画布像素）。左臂就是原始朝向；右臂整棵镜像，角度取反。缺手型时回退 hand-relaxed.png。",
+    "zRule": "10=后发 · 20=双手背后（夹在后发与身体之间） · 30=身体 · 36=左臂 · 38=右臂 · 55=中发 · 63=五官层 · 65=举到脸旁的手臂",
+    "hands": ["relaxed", "open", "thumb", "cross", "hip", "count"],
+    "poses": "js/character.js → ARM_POSES（10 个姿态：idle×3, warn-cred, warn-cost, warn-both, pass×2, fail×2）"
+  },
+  "files": {
+    "faceBase": ["face-base.png"],
+    "faceFeaturesOpen": ["face-idle-open.png", "face-warn-cred-open.png", "face-warn-cost-open.png", "face-warn-both-open.png", "face-pass-open.png", "face-fail-open.png"],
+    "faceFeaturesBlink": ["face-idle-blink.png", "face-warn-blink.png", "face-pass-blink.png", "face-fail-blink.png"],
+    "hairFront": ["hair-front-1.png", "hair-front-2.png", "hair-front-3.png"],
+    "hairMid": ["hair-mid.png"],
+    "hairBack": ["hair-back.png"],
+    "body": ["body.png"],
+    "arms": ["arm-upper.png", "arm-fore.png"],
+    "hands": ["hand-relaxed.png", "hand-open.png", "hand-thumb.png", "hand-count.png"],
+    "handsOptional": { "note": "半握与叉腰手为可选项，缺图时自动用 hand-relaxed 顶", "cross": "hand-cross.png → hand-relaxed.png", "hip": "hand-hip.png → hand-relaxed.png" },
+    "handTransform": "每个姿态的每条臂可额外给 hx / hy（画布像素偏移）· tilt（手旋转）· hs（手大小 %）",
+    "bubbleTransform": "气泡按表情各一份 { dx, dy, s, r }，轴心在气泡中心（17% 10%）",
+    "bubbles": ["bubble-warn-cred.png", "bubble-warn-cost.png", "bubble-warn-both.png", "bubble-pass.png", "bubble-fail.png"]
+  },
+  "received": "28 / 28 全部到位（含 6 张表情 open + 4 张 blink + 5 张气泡 + 4 张手型）",
+  "totalFiles": 28,
+  "motion": {
+    "status": "arms-done",
+    "note": "手臂关节摆动已实现（角度表驱动 + 姿态变体轮换）；头发摇摆、呼吸起伏待实现，轴心见 layers[].anchor"
+  }
+}
