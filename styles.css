@@ -335,6 +335,7 @@ input[type=range] { width: 100%; accent-color: var(--green); height: 26px; }
  * --------------------------------------------------------------- */
 .puppet-stage .arm-wrap,
 .puppet-stage .arm,
+.puppet-stage .sway,
 .puppet-stage .seg,
 .puppet-stage .hand { position: absolute; inset: 0; }
 
@@ -343,25 +344,63 @@ input[type=range] { width: 100%; accent-color: var(--green); height: 26px; }
 .puppet-stage .arm { transform-origin: 39.70% 56.43%; transition: transform 1.15s cubic-bezier(.25, .75, .3, 1); }
 .puppet-stage .seg { transform-origin: 39.80% 66.79%; transition: transform 1.15s cubic-bezier(.25, .75, .3, 1); transition-delay: .08s; }
 .puppet-stage .hand { transform-origin: 40.00% 71.79%; transition: transform .95s cubic-bezier(.25, .75, .3, 1); transition-delay: .16s; }
+
+/* 手臂静止时的细微左右摆动：摆完姿势不会像石头一样僵住 */
+.puppet-stage .sway {
+  transform-origin: 39.70% 56.43%;
+  animation: armSwayL 6.9s ease-in-out infinite;
+  will-change: transform;
+}
+.puppet-stage .arm-wrap.is-right .sway { animation-name: armSwayR; animation-duration: 7.8s; }
+@keyframes armSwayL {
+  0%, 100% { transform: translateX(-1.1%) rotate(-1.1deg); }
+  50%      { transform: translateX(1.6%) rotate(1.3deg); }
+}
+@keyframes armSwayR {
+  0%, 100% { transform: translateX(1.5%) rotate(1.2deg); }
+  50%      { transform: translateX(-1.0%) rotate(-1.2deg); }
+}
+
+/* ---------------- 头发：前刘海摆动明显，后发小幅度 ---------------- */
+.layer-hair-front-1 { animation: hairSwayA 4.3s ease-in-out infinite; }
+.layer-hair-front-2 { animation: hairSwayB 5.1s ease-in-out infinite; }
+.layer-hair-front-3 { animation: hairSwayC 4.7s ease-in-out infinite; }
+.layer-hair-back    { animation: hairSwayBack 6.6s ease-in-out infinite; }
+@keyframes hairSwayA {
+  0%, 100% { transform: rotate(-4.2deg); }
+  50%      { transform: rotate(3.4deg); }
+}
+@keyframes hairSwayB {
+  0%, 100% { transform: rotate(3.6deg); }
+  50%      { transform: rotate(-3.0deg); }
+}
+@keyframes hairSwayC {
+  0%, 100% { transform: rotate(-3.0deg); }
+  50%      { transform: rotate(4.4deg); }
+}
+@keyframes hairSwayBack {
+  0%, 100% { transform: rotate(-1.1deg); }
+  50%      { transform: rotate(1.1deg); }
+}
 /* 气泡：位置/大小/旋转可以单独调（轴心在气泡中心） */
 .layer-bubble-face { transform-origin: 17% 10%; transition: transform .5s ease; }
 
 /* 层级：小臂压在大臂上（肘部袖口盖住接缝），小臂又压住手（袖口盖住掌根） */
-.puppet-stage .arm > .art { z-index: 1; }
+.puppet-stage .sway > .art { z-index: 1; }
 .puppet-stage .seg { z-index: 3; }
 .puppet-stage .seg > .art { z-index: 3; }
 .puppet-stage .hand { z-index: 1; }
 
-.puppet-stage .arm .art,
+.puppet-stage .sway .art,
 .puppet-stage .seg .art,
 .puppet-stage .hand .art {
   position: absolute; inset: 0; width: 100%; height: 100%;
   opacity: 0; transition: opacity .18s ease; pointer-events: none;
 }
-.puppet-stage .arm.has-art > .art,
+.puppet-stage .sway.has-art > .art,
 .puppet-stage .seg.has-art > .art,
 .puppet-stage .hand.has-art > .art { opacity: 1; }
-.puppet-stage .arm.has-art > .ph,
+.puppet-stage .sway.has-art > .ph,
 .puppet-stage .seg.has-art > .ph,
 .puppet-stage .hand.has-art > .ph { display: none; }
 

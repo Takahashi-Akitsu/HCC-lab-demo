@@ -16,6 +16,8 @@
   let currentId = null;
   let currentPuppet = null;
   let currentPuppetState = 'idle';
+  /* 提示语里对「提示来源」的指代：带角色版看角色表情，无角色版看顶部提醒条 */
+  const CH = SQ.config.showCharacter ? '左侧角色的表情' : '顶部提醒条';
 
   /* ---------------- 状态 ---------------- */
   function defaultParams(l) {
@@ -96,8 +98,8 @@
             <span class="mt-body">
               <span class="mt-title">盲盒模式：${data.blindBox ? '已开启' : '已关闭'}</span>
               <span class="mt-desc">${data.blindBox
-                ? '设计得分全程隐藏，改由左侧角色的表情提示你的设计是否偏离区间；分数在关卡完成时揭晓。'
-                : '点击开启：不显示设计得分，改为凭判断设计，由角色表情给出提示。'}</span>
+                ? '设计得分全程隐藏，改由' + CH + '提示你的设计是否偏离区间；分数在关卡完成时揭晓。'
+                : '点击开启：不显示设计得分，改为凭判断设计，由' + CH + '给出提示。'}</span>
             </span>
           </button>
         </section>
@@ -468,7 +470,7 @@
     if (r.credibility < 50) w.push('证据可能不够');
     if (r.timeCost > 70 || r.moneyCost > 80) w.push('成本可能偏高');
     return w.length
-      ? `<div class="livewarn">🎁 盲盒模式：${w.join(' · ')}——看看左侧角色的表情。</div>`
+      ? `<div class="livewarn">🎁 盲盒模式：${w.join(' · ')}——看看${CH}。</div>`
       : '';
   }
 
@@ -593,7 +595,7 @@
       ${scoreRow}
       <ul class="msgs">${r.messages.map(m => `<li class="${m.tone}">${m.text}</li>`).join('')}</ul>
       ${r.pass ? '<div class="fb-next">设计达标——继续往下，读研究结果并回答结论题。</div>'
-               : `<div class="fb-next dim">${bb ? '盲盒开启中：调整参数后再次提交，由角色表情提示你是否接近区间。' : '调整参数后再次提交；重做达标会按 0.6 计分，使用提示后按 0.3 计分。'}</div>`}`;
+               : `<div class="fb-next dim">${bb ? '盲盒开启中：调整参数后再次提交，由' + CH + '提示你是否接近区间。' : '调整参数后再次提交；重做达标会按 0.6 计分，使用提示后按 0.3 计分。'}</div>`}`;
   }
 
   function showHint(id) {

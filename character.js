@@ -265,14 +265,16 @@
     const armWrapHTML = side => `
       <div class="arm-wrap arm-${side} ${side === 'L' ? 'is-left' : 'is-right'}" data-side="${side}" style="z-index:${ARM_Z[side]}">
         <div class="arm" data-part="arm-upper">
-          <div class="ph ph-arm-upper"></div>
-          <img class="art" alt="">
-          <div class="seg" data-part="arm-fore">
-            <div class="ph ph-arm-fore"></div>
+          <div class="sway" data-part="sway">
+            <div class="ph ph-arm-upper"></div>
             <img class="art" alt="">
-            <div class="hand" data-part="hand">
-              <div class="ph ph-hand"></div>
+            <div class="seg" data-part="arm-fore">
+              <div class="ph ph-arm-fore"></div>
               <img class="art" alt="">
+              <div class="hand" data-part="hand">
+                <div class="ph ph-hand"></div>
+                <img class="art" alt="">
+              </div>
             </div>
           </div>
         </div>
@@ -300,7 +302,7 @@
         <div class="ctl-panel" id="ctlPanel" hidden>
           <div class="ctl-row"><span>左右</span><input type="range" id="poseX" min="-5" max="75" step="1" aria-label="左右位置"><b id="poseXv"></b></div>
           <div class="ctl-row"><span>上下</span><input type="range" id="poseY" min="-5" max="80" step="1" aria-label="上下位置"><b id="poseYv"></b></div>
-          <div class="ctl-row"><span>大小</span><input type="range" id="poseS" min="40" max="180" step="5" aria-label="大小"><b id="poseSv"></b></div>
+          <div class="ctl-row"><span>大小</span><input type="range" id="poseS" min="40" max="240" step="5" aria-label="大小"><b id="poseSv"></b></div>
           <button type="button" class="ctl-reset" id="poseReset">恢复默认</button>
           <p class="ctl-tip">也可以直接拖动角色移动位置</p>
         </div>
@@ -321,7 +323,7 @@
     /* ---------- 手臂：写角度 + 换手型 ---------- */
     const appliedTilt = { L: 0, R: 0 };   // 记录上一次实际写入的手旋转角（用于抄最近路径）
     const armNode = (side, part) =>
-      host.querySelector('.arm-wrap.arm-' + side + (part === 'arm' ? ' > .arm' : part === 'seg' ? ' .seg' : ' .hand'));
+      host.querySelector('.arm-wrap.arm-' + side + (part === 'arm' ? ' > .arm' : ' .' + part));
 
     function applyArm(side, a) {
       const wrap = host.querySelector('.arm-wrap.arm-' + side);
@@ -459,7 +461,7 @@
       /* 手臂：大臂 / 小臂各一张，左右共用 */
       firstAvailable([BASE + ARM_FILES.upper]).then(url => {
         if (my !== token) return;
-        ['L', 'R'].forEach(s => setSegArt(armNode(s, 'arm'), url));
+        ['L', 'R'].forEach(s => setSegArt(armNode(s, 'sway'), url));
       });
       firstAvailable([BASE + ARM_FILES.fore]).then(url => {
         if (my !== token) return;
